@@ -1,0 +1,40 @@
+﻿using GAServices.BusinessEntities.FibrePOEntities;
+using GAServices.BusinessEntities.YarnSales;
+using GAServices.Repositories;
+using Microsoft.AspNetCore.Mvc;
+
+namespace GAServices.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class YarnOrderController : ControllerBase
+    {
+        private readonly IYarnOrderRepository _yarnOrderRepository;
+        private readonly ICommonRepository _commonRepository;
+
+        public YarnOrderController(IYarnOrderRepository yarnOrderRepository, ICommonRepository commonRepository)
+        {
+            _yarnOrderRepository = yarnOrderRepository;
+            _commonRepository = commonRepository;
+        }
+
+        [HttpPost("ReceiveYarnOrder")]
+        public IActionResult ReceiveYarnOrder(YarnOrder order)
+        {
+            try
+            {
+                bool isReceived = _yarnOrderRepository.ReceiveYarnOrder(order);
+
+                if (isReceived)
+                    return Ok("YarnOrder Received Successfully");
+                else
+                    return Ok("Not able to receive the YarnOrder");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+    }
+}

@@ -1,0 +1,59 @@
+﻿using System.Data;
+using System.Xml.Serialization;
+using GAServices.BusinessEntities.FibrePOEntities;
+using GAServices.BusinessEntities.Party;
+using GAServices.BusinessEntities.YarnSales;
+using GAServices.Common;
+using MySql.Data.MySqlClient;
+//using static Google.Protobuf.WireFormat;
+
+namespace GAServices.Repositories
+{
+    public interface IYarnOrderRepository
+    {
+        public bool ReceiveYarnOrder(YarnOrder order);
+    }
+
+    public class YarnOrderRepository : IYarnOrderRepository
+    {
+        private readonly DataAccess _dataAccess;
+
+        public YarnOrderRepository()
+        {
+            _dataAccess = new DataAccess();
+        }
+        
+        public bool ReceiveYarnOrder(YarnOrder order)
+        {
+            List<MySqlParameter> inParam = new List<MySqlParameter>();
+
+            inParam.Add(new MySqlParameter("pPartyId", order.PartyId));
+            inParam.Add(new MySqlParameter("pOrderNo", order.OrderNo));
+            inParam.Add(new MySqlParameter("pOrderDate", order.OrderDate));
+            inParam.Add(new MySqlParameter("pReceivedDate", order.ReceivedDate));
+            inParam.Add(new MySqlParameter("pDueDays", order.DueDays));
+            inParam.Add(new MySqlParameter("pBrokerName", order.BrokerName));
+            inParam.Add(new MySqlParameter("pOrderDts", order.OrderDts.GetXmlString()));
+            inParam.Add(new MySqlParameter("pRemarks", order.Remarks));
+            inParam.Add(new MySqlParameter("pUserId", order.ReceivedByUseId.ToString()));
+
+            List<MySqlParameter> outParam = new List<MySqlParameter>();
+            outParam.Add(new MySqlParameter("pRecordsInserted", MySqlDbType.Int64));
+
+            AppResponse response = _dataAccess.DB.Insert_UpdateData("ReceiveYarnOrder", inParam.ToArray(), outParam.ToArray());
+
+            if (response != null)
+            {
+                if (response.ReturnData != null)
+                {
+                    if (response.ReturnData["pRecordsInserted"].ToLong() > 0)
+                        return true;
+                    else
+                        return false;
+                }
+            }
+
+            return false;
+        }
+    }
+}
