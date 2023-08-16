@@ -186,9 +186,9 @@ namespace GAServices.Controllers
         }
 
         [HttpPost("ReceiveFibre")]
-        public IActionResult ReceiveFibrePO([FromBody] ReceiveFibrePO model)
+        public IActionResult ReceiveFibre([FromBody] ReceiveFibrePO model)
         {
-                bool isReceived = _fibreRepository.ReceiveFibrePO(model);
+                bool isReceived = _fibreRepository.ReceivePOFibre(model);
 
                 if (isReceived)
                     //return StatusCode(StatusCodes.Status202Accepted);
@@ -244,6 +244,12 @@ namespace GAServices.Controllers
         public ActionResult<IEnumerable<FibrePO>> GetFiberPODetails_WitStatus(long partyId, string fromDate, string toDate)
         {
             return _fibreRepository.GetFiberPODetails_WitStatus(partyId, fromDate, toDate);
+        }
+
+        [HttpGet("GetFiberConsumptionByRecdDtsId")]
+        public List<FiberIssueDetails> GetFiberConsumptionByRecdDtsId(long receivedDtsId)
+        {
+            return _fibreRepository.GetFiberConsumptionByRecdDtsId(receivedDtsId);
         }
     }
 }

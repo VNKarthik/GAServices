@@ -471,9 +471,10 @@ namespace GAServices.Common
                 if (p != null && row[c] != DBNull.Value)
                 {
                     p.Name.ToLower();
-                    p.SetValue(item, row[c], null);
+                    //p.SetValue(item, row[c], null);
                     //(T)Convert.ChangeType(Value, typeof(T));
                     //p.SetValue(item, Convert.ChangeType(row[c], typeof(item)), null);
+                    p.SetValue(item, Convert.ChangeType(row[c], p.PropertyType), null);
                 }
             }
         }

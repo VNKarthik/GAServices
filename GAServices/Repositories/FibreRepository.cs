@@ -1,5 +1,6 @@
 ﻿using System.Data;
 using System.Xml.Serialization;
+using GAServices.BusinessEntities.Conversion;
 using GAServices.BusinessEntities.FibrePOEntities;
 using GAServices.BusinessEntities.Party;
 using GAServices.Common;
@@ -36,7 +37,7 @@ namespace GAServices.Repositories
 
         //public bool IsAlreadyReceived();
 
-        public bool ReceiveFibrePO(ReceiveFibrePO fibrePO);
+        public bool ReceivePOFibre(ReceiveFibrePO fibrePO);
 
         public Task<List<POSummaryFor12Months>> Last12MonthSummary();
 
@@ -49,6 +50,8 @@ namespace GAServices.Repositories
         public List<FibrePO> GetFibreOrdersPendingToReceive();
 
         public List<FibrePO> GetFiberPODetails_WitStatus(long partyId, string fromDate, string toDate);
+
+        public List<FiberIssueDetails> GetFiberConsumptionByRecdDtsId(long receivedDtsId);
     }
 
     public class FibreRepository : IFibreRepository
@@ -261,7 +264,7 @@ namespace GAServices.Repositories
         /// </summary>
         /// <param name="fibrePO"></param>
         /// <returns></returns>
-        public bool ReceiveFibrePO(ReceiveFibrePO fibrePO)
+        public bool ReceivePOFibre(ReceiveFibrePO fibrePO)
         {
             //Need to do duplicate check before receiving
 
@@ -343,6 +346,11 @@ namespace GAServices.Repositories
             inParam.Add(new MySqlParameter("pToDate", toDate));
 
             return _dataAccess.DB.GetData<FibrePO>("GetFiberPODetails_WitStatus", inParam);
+        }
+    
+        public List<FiberIssueDetails> GetFiberConsumptionByRecdDtsId (long receivedDtsId)
+        {
+            return _dataAccess.DB.GetData<FiberIssueDetails>("GetFiberConsumptionByRecdDtsId", new List<MySqlParameter>() { new MySqlParameter("pReceivedDtsId", receivedDtsId) });
         }
     }
 }

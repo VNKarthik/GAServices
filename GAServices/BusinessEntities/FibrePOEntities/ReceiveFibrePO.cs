@@ -19,6 +19,10 @@
     {
         public long PoDtsId { get; set; }
 
+        public long FiberTypeId { get; set; }
+
+        public long FiberShadeId { get; set; }
+
         public string Lot { get; set; }
 
         public long HSNCode { get; set; }

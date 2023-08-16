@@ -66,5 +66,19 @@ namespace GAServices.Controllers
         {
             return _masterRepository.GetYarnCountsList();
         }
+
+        [HttpPost("AddWasteCategory")]
+        public async Task<ActionResult<FibreWasteCategory>> AddWasteCategory(string wasteCategoryName, long createdByUserId)
+        {
+            long newWasteCategoryId = _masterRepository.AddWasteCategory(wasteCategoryName, createdByUserId);
+
+            return CreatedAtAction("GetWasteCategories", newWasteCategoryId, newWasteCategoryId);
+        }
+
+        [HttpGet("GetWasteCategories")]
+        public ActionResult<List<FibreWasteCategory>> GetWasteCategories()
+        {
+            return _masterRepository.GetWasteCategories();
+        }
     }
 }

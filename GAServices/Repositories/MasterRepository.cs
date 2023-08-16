@@ -4,6 +4,7 @@ using MySql.Data.MySqlClient;
 using GAServices.BusinessEntities.Yarn;
 using System.Data;
 using Microsoft.AspNetCore.Mvc;
+using GAServices.BusinessEntities.Conversion;
 
 namespace GAServices.Repositories
 {
@@ -22,6 +23,10 @@ namespace GAServices.Repositories
         public long AddYarnCounts(string counts);
 
         public List<YarnCounts> GetYarnCountsList();
+
+        public long AddWasteCategory(string wasteCategoryName, long createdByUserId);
+
+        public List<FibreWasteCategory> GetWasteCategories();
     }
 
     public class MasterRepository : IMasterRepository
@@ -152,8 +157,41 @@ namespace GAServices.Repositories
                 return yarnCounts;
             else
                 return null;
-
         }
 
+        public long AddWasteCategory(string wasteCategoryName, long createdByUserId)
+        {
+            List<MySqlParameter> inParam = new List<MySqlParameter>();
+            inParam.Add(new MySqlParameter("pWasteCategoryName", wasteCategoryName));
+            inParam.Add(new MySqlParameter("pUserId", createdByUserId));
+            
+            List<MySqlParameter> outParam = new List<MySqlParameter>();
+            outParam.Add(new MySqlParameter("pWasteCategoryId", MySqlDbType.Int64));
+
+            AppResponse response = _dataAccess.DB.Insert_UpdateData("AddFiberWasteCategory", inParam.ToArray(), outParam.ToArray());
+
+            if (response != null)
+            {
+                if (response.ReturnData != null)
+                {
+                    return response.ReturnData["pWasteCategoryId"].ToLong();
+                }
+            }
+
+            return 0;
+        }
+
+        public List<FibreWasteCategory> GetWasteCategories()
+        {
+            List<FibreWasteCategory> wasteCategory = new List<FibreWasteCategory>();
+            DataTable dtCounts = _dataAccess.DB.GetData("GetFiberWasteCategories", null);
+
+            wasteCategory = Utilities.CreateListFromTable<FibreWasteCategory>(dtCounts);
+
+            if (wasteCategory.Count > 0)
+                return wasteCategory;
+            else
+                return null;
+        }
     }
 }

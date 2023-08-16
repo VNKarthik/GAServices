@@ -19,6 +19,8 @@
 
         public long ShadeId { get; set; }
 
+        public string Lot { get; set; }
+
         public decimal IssueQuantity { get; set; }
     }
 }
