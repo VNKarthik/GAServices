@@ -9,8 +9,8 @@ namespace GAServices.BusinessEntities.FibrePOEntities
         public long FibreCategoryId { get; set; }
         public string PartyName { get; set; }
         public string FibreCategoryName { get; set; }
-        public string CategoryCode { get; set; }
-        public int CategoryOrder { get; set; }
+        //public string CategoryCode { get; set; }
+        //public int CategoryOrder { get; set; }
         public long FibreTypeId { get; set; }
         public string FibreType { get; set; }
         public long ShadeId { get; set; }
@@ -18,6 +18,7 @@ namespace GAServices.BusinessEntities.FibrePOEntities
         public string Lot { get; set; }
         public long AgeInDays { get; set; }
         public double ReceivedQty { get; set; }
+        public double IssuedQty { get; set; }
         public double Stock { get; set; }
         public double Rate { get; set; }
     }

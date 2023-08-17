@@ -52,6 +52,8 @@ namespace GAServices.Repositories
         public List<FibrePO> GetFiberPODetails_WitStatus(long partyId, string fromDate, string toDate);
 
         public List<FiberIssueDetails> GetFiberConsumptionByRecdDtsId(long receivedDtsId);
+
+        public List<FibreStock> GetFibreStockSearch(string asOnDate, long partyId, long fiberTypeId);
     }
 
     public class FibreRepository : IFibreRepository
@@ -351,6 +353,16 @@ namespace GAServices.Repositories
         public List<FiberIssueDetails> GetFiberConsumptionByRecdDtsId (long receivedDtsId)
         {
             return _dataAccess.DB.GetData<FiberIssueDetails>("GetFiberConsumptionByRecdDtsId", new List<MySqlParameter>() { new MySqlParameter("pReceivedDtsId", receivedDtsId) });
+        }
+
+        public List<FibreStock> GetFibreStockSearch(string asOnDate, long partyId, long fiberTypeId)
+        {
+            List<MySqlParameter> inParams = new List<MySqlParameter>();
+            inParams.Add(new MySqlParameter("pAsOnDate", asOnDate));
+            inParams.Add(new MySqlParameter("pPartyId", partyId));
+            inParams.Add(new MySqlParameter("pFiberTypeId", fiberTypeId));
+
+            return _dataAccess.DB.GetData<FibreStock>("GetFibreStockSearch", inParams);
         }
     }
 }

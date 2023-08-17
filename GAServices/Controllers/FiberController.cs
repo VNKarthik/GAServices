@@ -251,5 +251,12 @@ namespace GAServices.Controllers
         {
             return _fibreRepository.GetFiberConsumptionByRecdDtsId(receivedDtsId);
         }
+
+        [HttpGet("GetFibreStockSearch")]
+        public ActionResult<IEnumerable<FibreStock>> GetFibreStockSearch(string asOnDate, long partyId, long fiberTypeId)
+        {
+            return _fibreRepository.GetFibreStockSearch(asOnDate, partyId, fiberTypeId);
+        }
+
     }
 }
