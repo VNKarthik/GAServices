@@ -6,6 +6,7 @@ namespace GAServices.BusinessEntities.FibrePOEntities
     {
         public string ReceivedDCNo { get; set; }
         public long ReceivedDtsId { get; set; }
+        public string ReceivedDate { get; set; }
         public long FibreCategoryId { get; set; }
         public string PartyName { get; set; }
         public string FibreCategoryName { get; set; }

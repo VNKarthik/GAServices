@@ -21,7 +21,7 @@
 
         public List<ConversionYarn> YarnCounts { get; set; }
 
-        public List<ProgramFibresMixed> MixingSummary { get; set; }
+        public List<ProgramFibersMixed> MixingDetails { get; set; }
     }
 
     public class ConversionYarn
@@ -94,12 +94,18 @@
         public double WasteQuantity { get; set; }
     }
 
-    public class ProgramFibresMixed
+    public class ProgramFibersMixed
     {
-        public long FibreCategoryid { get; set; }
-
-        public long FibreTypeId { get; set; }
-
+        public long FiberCategoryid { get; set; }
+        public string FiberCategory { get; set; }
+        public long FiberTypeId { get; set; }
+        public string FiberType { get; set; }
+        public long FiberShadeId { get; set; }
+        public string FiberShade { get; set; }
+        public string ReceivedDCNo { get; set; }
+        public string ReceivedDate { get; set; }
+        public string Lot { get; set; }
+        public double Rate { get; set; }
         public double IssuedQuantity { get; set; }
     }
 

@@ -88,7 +88,9 @@ namespace GAServices.Repositories
             programDtsForMixing = Utilities.CreateListFromTable<ConversionProgram>(dtProgramDetails).Distinct().FirstOrDefault();
 
             programDtsForMixing.YarnCounts = GetProgramYarnDetailsById(programId);
-            
+
+            programDtsForMixing.MixingDetails = GetProgramMixingDetailsById(programId);
+
             return programDtsForMixing;
         }
 
@@ -98,6 +100,14 @@ namespace GAServices.Repositories
             conversionYarn = _dataAccess.DB.GetData<ConversionYarn>("GetProgramYarnDetailsById", new List<MySqlParameter>() { new MySqlParameter("pProgramId", programId) });
 
             return conversionYarn;
+        }
+
+        public List<ProgramFibersMixed> GetProgramMixingDetailsById(long programId)
+        {
+            List<ProgramFibersMixed> fibersMixed;
+            fibersMixed = _dataAccess.DB.GetData<ProgramFibersMixed>("GetProgramMixingDetailsById", new List<MySqlParameter>() { new MySqlParameter("pProgramId", programId) });
+
+            return fibersMixed;
         }
 
         public bool IssueFibreForMixing(FibreMixing fibres)
