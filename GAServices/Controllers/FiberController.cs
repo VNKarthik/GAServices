@@ -194,7 +194,7 @@ namespace GAServices.Controllers
                     //return StatusCode(StatusCodes.Status202Accepted);
                     return Ok("Fibre Received Successfully");
                 else
-                    return Ok("Not able to receive the Fibre");
+                    return BadRequest("Not able to receive the Fibre");
             
         }
 

@@ -39,7 +39,7 @@ namespace GAServices.BusinessEntities.FibrePOEntities
     public class FiberIssueDetails
     {
         public string IssuedProgramNo { get; set; }
-        public DateTime IssuedDate { get; set; }
+        public string IssuedDate { get; set; }
         public string YarnShade { get; set; }
         public string BlendName { get; set; }
         public double IssuedQty { get; set; }

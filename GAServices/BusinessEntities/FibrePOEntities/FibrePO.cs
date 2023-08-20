@@ -94,6 +94,8 @@
 
         public string PONo { get; set; }
 
+        public string PODate { get; set; }
+
         public long PODtsId { get; set; }
 
         public long FibreTypeId { get; set; }
