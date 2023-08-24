@@ -4,9 +4,9 @@
     {
         public string RecdDCNo { get; set; }
 
-        public DateTime RecdDate { get; set; }
+        public string RecdDate { get; set; }
 
-        public DateTime DCDate { get; set; }
+        public string DCDate { get; set; }
 
         public long PartyId { get; set; }
 

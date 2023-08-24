@@ -186,7 +186,8 @@ namespace GAServices.Controllers
         }
 
         [HttpPost("ReceiveFibre")]
-        public IActionResult ReceiveFibre([FromBody] ReceiveFibrePO model)
+        //public IActionResult ReceiveFibre([FromBody] ReceiveFibrePO model)
+        public IActionResult ReceiveFibre(ReceiveFibrePO model)
         {
                 bool isReceived = _fibreRepository.ReceivePOFibre(model);
 

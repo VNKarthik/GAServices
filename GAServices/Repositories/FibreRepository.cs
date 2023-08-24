@@ -280,8 +280,10 @@ namespace GAServices.Repositories
             {
                 inParam.Add(new MySqlParameter("pPartyId", fibrePO.PartyId.ToString()));
                 inParam.Add(new MySqlParameter("pRecdDCNo", fibrePO.RecdDCNo.ToString()));
-                inParam.Add(new MySqlParameter("pRecdDate", fibrePO.RecdDate.ToString("yyyy-MM-dd")));
-                inParam.Add(new MySqlParameter("pDCDate", fibrePO.DCDate.ToString("yyyy-MM-dd")));
+                //inParam.Add(new MySqlParameter("pRecdDate", fibrePO.RecdDate.ToString("yyyy-MM-dd")));
+                //inParam.Add(new MySqlParameter("pDCDate", fibrePO.DCDate.ToString("yyyy-MM-dd")));
+                inParam.Add(new MySqlParameter("pRecdDate", fibrePO.RecdDate));
+                inParam.Add(new MySqlParameter("pDCDate", fibrePO.DCDate));
                 inParam.Add(new MySqlParameter("pFibreDts", lstFibres.GetXmlString()));
                 inParam.Add(new MySqlParameter("pUserId", fibrePO.ReceivedByUserId.ToString()));
 

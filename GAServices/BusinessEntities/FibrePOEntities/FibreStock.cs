@@ -4,6 +4,7 @@ namespace GAServices.BusinessEntities.FibrePOEntities
 {
     public class FibreStock
     {
+        public string PONo { get; set; }
         public string ReceivedDCNo { get; set; }
         public long ReceivedDtsId { get; set; }
         public string ReceivedDate { get; set; }
