@@ -157,5 +157,11 @@ namespace GAServices.Controllers
         {
             return _yarnOrderRepository.GetYarnOrderInvoiceDCDtsById(invoiceId);
         }
+
+        [HttpPost("ReceiveYarnReturn")]
+        public bool ReceiveYarnReturn(YarnReturn yarnReturn, long createdUserId)
+        {
+            return _yarnOrderRepository.ReceiveYarnReturn(yarnReturn, createdUserId);
+        }
     }
 }

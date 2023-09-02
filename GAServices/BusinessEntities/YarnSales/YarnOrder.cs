@@ -270,4 +270,32 @@ namespace GAServices.BusinessEntities.YarnSales
         public double DeliveryQty { get; set; }
         public long HSNCode { get; set; }
     }
+
+    public class YarnReturn
+    {
+        public long ReturnId { get; set; }
+        public string ReturnDate { get; set; }
+        public string ReturnDCNo { get; set; }
+        public string IssuedDCNo { get; set; }
+        public string InvoiceNo { get; set; }
+        public long PartyNo { get; set; }
+        public string ReturnReason { get; set; }
+        public string Remarks { get; set; }
+
+        public List<YarnReturnDetails> YarnReturnDetails { get; set; }
+    }
+
+    public class YarnReturnDetails
+    {
+        public long ReturnDtsId { get; set;}
+        public long CountsId { get; set; }
+        public string Counts { get; set; }
+        public long BlendId { get; set; }
+        public string BlendName { get; set; }
+        public long ShadeId { get; set; }
+        public string ShadeName { get; set;}
+        public string Lot { get; set; }
+        public double IssuedQty { get; set; }
+        public double ReturnQty { get; set; }
+    }
 }

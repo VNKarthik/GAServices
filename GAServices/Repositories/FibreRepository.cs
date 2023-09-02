@@ -276,36 +276,29 @@ namespace GAServices.Repositories
 
             List<MySqlParameter> inParam = new List<MySqlParameter>();
 
-            try
+            inParam.Add(new MySqlParameter("pPartyId", fibrePO.PartyId.ToString()));
+            inParam.Add(new MySqlParameter("pRecdDCNo", fibrePO.RecdDCNo.ToString()));
+            //inParam.Add(new MySqlParameter("pRecdDate", fibrePO.RecdDate.ToString("yyyy-MM-dd")));
+            //inParam.Add(new MySqlParameter("pDCDate", fibrePO.DCDate.ToString("yyyy-MM-dd")));
+            inParam.Add(new MySqlParameter("pRecdDate", fibrePO.RecdDate));
+            inParam.Add(new MySqlParameter("pDCDate", fibrePO.DCDate));
+            inParam.Add(new MySqlParameter("pFibreDts", lstFibres.GetXmlString()));
+            inParam.Add(new MySqlParameter("pUserId", fibrePO.ReceivedByUserId.ToString()));
+
+            List<MySqlParameter> outParam = new List<MySqlParameter>();
+            outParam.Add(new MySqlParameter("pRecordsInserted", MySqlDbType.Int64));
+
+            AppResponse response = _dataAccess.DB.Insert_UpdateData("RECEIVE_POFIBRE", inParam.ToArray(), outParam.ToArray());
+
+            if (response != null)
             {
-                inParam.Add(new MySqlParameter("pPartyId", fibrePO.PartyId.ToString()));
-                inParam.Add(new MySqlParameter("pRecdDCNo", fibrePO.RecdDCNo.ToString()));
-                //inParam.Add(new MySqlParameter("pRecdDate", fibrePO.RecdDate.ToString("yyyy-MM-dd")));
-                //inParam.Add(new MySqlParameter("pDCDate", fibrePO.DCDate.ToString("yyyy-MM-dd")));
-                inParam.Add(new MySqlParameter("pRecdDate", fibrePO.RecdDate));
-                inParam.Add(new MySqlParameter("pDCDate", fibrePO.DCDate));
-                inParam.Add(new MySqlParameter("pFibreDts", lstFibres.GetXmlString()));
-                inParam.Add(new MySqlParameter("pUserId", fibrePO.ReceivedByUserId.ToString()));
-
-                List<MySqlParameter> outParam = new List<MySqlParameter>();
-                outParam.Add(new MySqlParameter("pRecordsInserted", MySqlDbType.Int64));
-
-                AppResponse response = _dataAccess.DB.Insert_UpdateData("RECEIVE_POFIBRE", inParam.ToArray(), outParam.ToArray());
-
-                if (response != null)
+                if (response.ReturnData != null)
                 {
-                    if (response.ReturnData != null)
-                    {
-                        if (response.ReturnData["pRecordsInserted"].ToLong() > 0)
-                            return true;
-                        else
-                            return false;
-                    }
+                    if (response.ReturnData["pRecordsInserted"].ToLong() > 0)
+                        return true;
+                    else
+                        return false;
                 }
-            }
-            catch (Exception ex)
-            {
-
             }
 
             return false;
@@ -351,8 +344,8 @@ namespace GAServices.Repositories
 
             return _dataAccess.DB.GetData<FibrePO>("GetFiberPODetails_WitStatus", inParam);
         }
-    
-        public List<FiberIssueDetails> GetFiberConsumptionByRecdDtsId (long receivedDtsId)
+
+        public List<FiberIssueDetails> GetFiberConsumptionByRecdDtsId(long receivedDtsId)
         {
             return _dataAccess.DB.GetData<FiberIssueDetails>("GetFiberConsumptionByRecdDtsId", new List<MySqlParameter>() { new MySqlParameter("pReceivedDtsId", receivedDtsId) });
         }

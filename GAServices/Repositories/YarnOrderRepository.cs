@@ -51,6 +51,8 @@ namespace GAServices.Repositories
         public YarnInvoice GetYarnOrderInvoiceDtsById(long invoiceId);
 
         public YarnInvoice GetYarnOrderInvoiceDCDtsById(long invoiceId);
+
+        public bool ReceiveYarnReturn(YarnReturn yarnReturn, long createdUserId);
     }
 
     public class YarnOrderRepository : IYarnOrderRepository
@@ -398,6 +400,41 @@ namespace GAServices.Repositories
                 yarnInvoiceDts.InvoiceDCDts = _dataAccess.DB.GetData<InvoiceDCDts>("GetYarnOrderInvoiceDCDtsById", new List<MySqlParameter>() { new MySqlParameter("pInvoiceId", invoiceId) });
 
             return yarnInvoiceDts;
+        }
+
+        public bool ReceiveYarnReturn(YarnReturn yarnReturn, long createdUserId)
+        {
+            List<YarnReturnDetails> lstYarnDts = yarnReturn.YarnReturnDetails;
+
+            List<MySqlParameter> inParam = new List<MySqlParameter>();
+
+            inParam.Add(new MySqlParameter("pReturnDCNo", yarnReturn.ReturnDCNo));
+            inParam.Add(new MySqlParameter("pPartyId", yarnReturn.PartyNo.ToString()));            
+            inParam.Add(new MySqlParameter("pReturnDate", yarnReturn.ReturnDate));
+            inParam.Add(new MySqlParameter("pIssuedDCNo", yarnReturn.IssuedDCNo));
+            inParam.Add(new MySqlParameter("pInvoiceNo", yarnReturn.InvoiceNo));
+            inParam.Add(new MySqlParameter("pReturnReason", yarnReturn.ReturnReason));
+            inParam.Add(new MySqlParameter("pRemarks", yarnReturn.Remarks));
+            inParam.Add(new MySqlParameter("pReturnDts", lstYarnDts.GetXmlString()));
+            inParam.Add(new MySqlParameter("pUserId", createdUserId.ToString()));
+
+            List<MySqlParameter> outParam = new List<MySqlParameter>();
+            outParam.Add(new MySqlParameter("pYarnReturnId", MySqlDbType.Int64));
+
+            AppResponse response = _dataAccess.DB.Insert_UpdateData("ReceiveYarnReturn", inParam.ToArray(), outParam.ToArray());
+
+            if (response != null)
+            {
+                if (response.ReturnData != null)
+                {
+                    if (response.ReturnData["pYarnReturnId"].ToLong() > 0)
+                        return true;
+                    else
+                        return false;
+                }
+            }
+
+            return false;
         }
     }
 }
