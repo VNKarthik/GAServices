@@ -158,6 +158,12 @@ namespace GAServices.Controllers
             return _yarnOrderRepository.GetYarnOrderInvoiceDCDtsById(invoiceId);
         }
 
+        [HttpGet("SearchYarnDeliveries")]
+        public List<YarnDeliverySearchResult> SearchYarnDeliveries(long partyId, long countsId, long blendId, long shadeId)
+        {
+            return _yarnOrderRepository.SearchYarnDeliveries(partyId, countsId, blendId, shadeId);
+        }
+
         [HttpPost("ReceiveYarnReturn")]
         public bool ReceiveYarnReturn(YarnReturn yarnReturn, long createdUserId)
         {

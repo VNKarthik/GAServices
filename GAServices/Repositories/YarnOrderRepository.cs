@@ -52,7 +52,10 @@ namespace GAServices.Repositories
 
         public YarnInvoice GetYarnOrderInvoiceDCDtsById(long invoiceId);
 
+        public List<YarnDeliverySearchResult> SearchYarnDeliveries(long partyId, long countsId, long blendId, long shadeId);
+
         public bool ReceiveYarnReturn(YarnReturn yarnReturn, long createdUserId);
+
     }
 
     public class YarnOrderRepository : IYarnOrderRepository
@@ -402,6 +405,18 @@ namespace GAServices.Repositories
             return yarnInvoiceDts;
         }
 
+        public List<YarnDeliverySearchResult> SearchYarnDeliveries(long partyId, long countsId, long blendId, long shadeId)
+        {
+            List<MySqlParameter> inParam = new List<MySqlParameter>();
+
+            inParam.Add(new MySqlParameter("pPartyId", partyId));
+            inParam.Add(new MySqlParameter("pCountsId", countsId));
+            inParam.Add(new MySqlParameter("pBlendId", blendId));
+            inParam.Add(new MySqlParameter("pShadeId", shadeId));
+
+            return _dataAccess.DB.GetData<YarnDeliverySearchResult>("SearchYarnDeliveries", inParam);
+        }
+
         public bool ReceiveYarnReturn(YarnReturn yarnReturn, long createdUserId)
         {
             List<YarnReturnDetails> lstYarnDts = yarnReturn.YarnReturnDetails;
@@ -409,10 +424,10 @@ namespace GAServices.Repositories
             List<MySqlParameter> inParam = new List<MySqlParameter>();
 
             inParam.Add(new MySqlParameter("pReturnDCNo", yarnReturn.ReturnDCNo));
-            inParam.Add(new MySqlParameter("pPartyId", yarnReturn.PartyNo.ToString()));            
+            inParam.Add(new MySqlParameter("pPartyId", yarnReturn.PartyNo.ToString()));
             inParam.Add(new MySqlParameter("pReturnDate", yarnReturn.ReturnDate));
-            inParam.Add(new MySqlParameter("pIssuedDCNo", yarnReturn.IssuedDCNo));
-            inParam.Add(new MySqlParameter("pInvoiceNo", yarnReturn.InvoiceNo));
+            //inParam.Add(new MySqlParameter("pIssuedDCNo", yarnReturn.IssuedDCNo));
+            //inParam.Add(new MySqlParameter("pInvoiceNo", yarnReturn.InvoiceNo));
             inParam.Add(new MySqlParameter("pReturnReason", yarnReturn.ReturnReason));
             inParam.Add(new MySqlParameter("pRemarks", yarnReturn.Remarks));
             inParam.Add(new MySqlParameter("pReturnDts", lstYarnDts.GetXmlString()));
@@ -436,5 +451,6 @@ namespace GAServices.Repositories
 
             return false;
         }
+
     }
 }

@@ -128,6 +128,7 @@ namespace GAServices.BusinessEntities.YarnSales
     {
         public long DCId { get; set; }
         public string DCNo { get; set; }
+        public string DCDate { get; set; }
         public long PartyId { get; set; }
         public string PartyName { get; set; }
         public string BranchName { get; set; }
@@ -230,10 +231,10 @@ namespace GAServices.BusinessEntities.YarnSales
     public class YarnInvoice
     {
         public long InvoiceId { get; set; }
-        public string InvoiceNo { get; set;}
+        public string InvoiceNo { get; set; }
         public string InvoiceDate { get; set; }
         public long PartyId { get; set; }
-        public string PartyName { get;set; }
+        public string PartyName { get; set; }
         public string PartyAddress1 { get; set; }
         public string PartyAddress2 { get; set; }
         public string PartyAddress3 { get; set; }
@@ -276,8 +277,6 @@ namespace GAServices.BusinessEntities.YarnSales
         public long ReturnId { get; set; }
         public string ReturnDate { get; set; }
         public string ReturnDCNo { get; set; }
-        public string IssuedDCNo { get; set; }
-        public string InvoiceNo { get; set; }
         public long PartyNo { get; set; }
         public string ReturnReason { get; set; }
         public string Remarks { get; set; }
@@ -287,15 +286,27 @@ namespace GAServices.BusinessEntities.YarnSales
 
     public class YarnReturnDetails
     {
-        public long ReturnDtsId { get; set;}
+        public long ReturnDtsId { get; set; }
+        public long IssuedDCId { get; set; }
+        public string IssuedDCNo { get; set; }
+        //public string InvoiceNo { get; set; }
         public long CountsId { get; set; }
         public string Counts { get; set; }
         public long BlendId { get; set; }
         public string BlendName { get; set; }
         public long ShadeId { get; set; }
-        public string ShadeName { get; set;}
+        public string ShadeName { get; set; }
         public string Lot { get; set; }
         public double IssuedQty { get; set; }
         public double ReturnQty { get; set; }
+    }
+
+    public class YarnDeliverySearchResult : YarnDCDetails
+    {
+        public long DCId { get; set; }
+        public string DCNo { get; set; }
+        public string DCDate { get; set; }
+        public long PartyId { get; set; }
+        public string PartyName { get; set; }
     }
 }
