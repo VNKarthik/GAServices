@@ -22,12 +22,12 @@ namespace GAServices.Controllers
         [HttpPost("ReceiveYarnOrder")]
         public IActionResult ReceiveYarnOrder(YarnOrder order)
         {
-                bool isReceived = _yarnOrderRepository.ReceiveYarnOrder(order);
+            bool isReceived = _yarnOrderRepository.ReceiveYarnOrder(order);
 
-                if (isReceived)
-                    return Ok("YarnOrder Received Successfully");
-                else
-                    return Ok("Not able to receive the YarnOrder");
+            if (isReceived)
+                return Ok("YarnOrder Received Successfully");
+            else
+                return Ok("Not able to receive the YarnOrder");
         }
 
         [HttpGet("GetYarnOrderListByParty")]
@@ -168,6 +168,24 @@ namespace GAServices.Controllers
         public bool ReceiveYarnReturn(YarnReturn yarnReturn, long createdUserId)
         {
             return _yarnOrderRepository.ReceiveYarnReturn(yarnReturn, createdUserId);
+        }
+
+        [HttpGet("GetYarnCurrentStock")]
+        public List<YarnStock> GetYarnCurrentStock()
+        {
+            return _yarnOrderRepository.GetYarnCurrentStock();
+        }
+
+        [HttpGet("GetYarnStock")]
+        public List<YarnStock> GetYarnStock(string asOnDate, long blendId, long shadeId, string lot)
+        {
+            return _yarnOrderRepository.GetYarnStock(asOnDate, blendId, shadeId, lot);
+        }
+
+        [HttpPut("UpdateEInvoiceNo")]
+        public bool UpdateEInvoiceNo(string eInvoiceNo, long invoiceId)
+        {
+            return _yarnOrderRepository.UpdateEInvoiceNo(eInvoiceNo, invoiceId);
         }
     }
 }

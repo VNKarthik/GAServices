@@ -98,6 +98,12 @@ namespace GAServices.Controllers
             return _conversionRepository.GetProgramWasteById(programId);
         }
 
+        [HttpGet("GetProductionWasteStock")]
+        public List<ProgramWasteStock> GetProductionWasteStock(string wasteEntryFromDate, string wasteEntryToDate, long shadeId, long blendId)
+        {
+            return _conversionRepository.GetProductionWasteStock(wasteEntryFromDate, wasteEntryToDate, shadeId, blendId);
+        }
+
 
         [HttpGet("GetYarnRecoverySummary")]
         public List<YarnRecoverySummary> GetYarnRecoverySummary()

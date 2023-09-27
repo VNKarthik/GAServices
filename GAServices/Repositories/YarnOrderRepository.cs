@@ -56,6 +56,12 @@ namespace GAServices.Repositories
 
         public bool ReceiveYarnReturn(YarnReturn yarnReturn, long createdUserId);
 
+        public List<YarnStock> GetYarnCurrentStock();
+
+        public List<YarnStock> GetYarnStock(string asOnDate, long blendId, long shadeId, string lot);
+
+        public bool UpdateEInvoiceNo(string eInvoiceNo, long invoiceId);
+
     }
 
     public class YarnOrderRepository : IYarnOrderRepository
@@ -290,6 +296,7 @@ namespace GAServices.Repositories
             inParam.Add(new MySqlParameter("pDeliveryAddressId", delivery.DeliveryAddressId));
             inParam.Add(new MySqlParameter("pDeliveryDts", delivery.DeliveryDts.GetXmlString()));
             inParam.Add(new MySqlParameter("pRemarks", delivery.Remarks));
+            inParam.Add(new MySqlParameter("pEWayBillNo", delivery.EWayBillNo));
             inParam.Add(new MySqlParameter("pVehicleNo", delivery.VehicleNo));
             inParam.Add(new MySqlParameter("pUserId", delivery.CreatedByUserId.ToString()));
 
@@ -383,7 +390,7 @@ namespace GAServices.Repositories
 
         public YarnInvoice GetYarnOrderInvoiceDtsById(long invoiceId)
         {
-            YarnInvoice ?yarnInvoiceDts;
+            YarnInvoice? yarnInvoiceDts;
 
             yarnInvoiceDts = _dataAccess.DB.GetData<YarnInvoice>("GetYarnOrderInvoiceById", new List<MySqlParameter>() { new MySqlParameter("pInvoiceId", invoiceId) }).FirstOrDefault();
 
@@ -452,5 +459,47 @@ namespace GAServices.Repositories
             return false;
         }
 
+        public List<YarnStock> GetYarnCurrentStock()
+        {
+            return GetYarnStock("", 0, 0, "");
+        }
+
+        public List<YarnStock> GetYarnStock(string asOnDate, long blendId, long shadeId, string lot)
+        {
+            List<MySqlParameter> lstInParams = new List<MySqlParameter>();
+
+            lstInParams.Add(new MySqlParameter("pAsOnDate", asOnDate));
+            lstInParams.Add(new MySqlParameter("pBlendId", blendId));
+            lstInParams.Add(new MySqlParameter("pShadeId", shadeId));
+            lstInParams.Add(new MySqlParameter("pLot", lot));
+
+            return _dataAccess.DB.GetData<YarnStock>("GetYarnStock", lstInParams);
+        }
+
+        public bool UpdateEInvoiceNo(string eInvoiceNo, long invoiceId)
+        {
+            List<MySqlParameter> inParam = new List<MySqlParameter>();
+
+            inParam.Add(new MySqlParameter("pEInvoiceNo", eInvoiceNo));
+            inParam.Add(new MySqlParameter("pInvoiceId", invoiceId));
+
+            List<MySqlParameter> outParam = new List<MySqlParameter>();
+            outParam.Add(new MySqlParameter("pRecordsUpdated", MySqlDbType.Int64));
+
+            AppResponse response = _dataAccess.DB.Insert_UpdateData("UpdateEInvoiceNo", inParam.ToArray(), outParam.ToArray());
+
+            if (response != null)
+            {
+                if (response.ReturnData != null)
+                {
+                    if (response.ReturnData["pRecordsUpdated"].ToLong() > 0)
+                        return true;
+                    else
+                        return false;
+                }
+            }
+
+            return false;
+        }
     }
 }

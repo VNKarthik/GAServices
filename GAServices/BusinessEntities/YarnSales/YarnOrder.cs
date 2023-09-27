@@ -67,6 +67,7 @@ namespace GAServices.BusinessEntities.YarnSales
         public long CountsId { get; set; }
         public string Counts { get; set; }
         public long ProductionYarnDtsId { set; get; }
+        public long YarnReturnDtsId { set; get; }
         public string Lot { get; set; }
         public double ProductionQuantity { get; set; }
         public double StockQuantity { get; set; }
@@ -82,6 +83,7 @@ namespace GAServices.BusinessEntities.YarnSales
         public long DeliveryAddressId { get; set; }
         public string VehicleNo { get; set; }
         public string Remarks { get; set; }
+        public string EWayBillNo { get; set; }
         public long CreatedByUserId { get; set; }
 
         public List<CreateYarnDeliveryDts> DeliveryDts { get; set; }
@@ -95,6 +97,7 @@ namespace GAServices.BusinessEntities.YarnSales
         public long BlendId { get; set; }
         public long CountsId { get; set; }
         public long ProductionDtsId { get; set; }
+        public long YarnReturnDtsId { set; get; }
         public double DeliveryQuantity { get; set; }
         public long HSNCode { get; set; }
     }
@@ -120,6 +123,7 @@ namespace GAServices.BusinessEntities.YarnSales
         public long HSNCode { get; set; }
         public string VehicleNo { get; set; }
         public string Remarks { get; set; }
+        public string EWayBillNo { get; set; }
         public long CreatedByUserId { get; set; }
 
     }
@@ -155,6 +159,7 @@ namespace GAServices.BusinessEntities.YarnSales
         public string DeliveryStateName { get; set; }
         public Int32 DeliveryStateCode { get; set; }
         public string DeliveryGSTNo { get; set; }
+        public string EWayBillNo { get; set; }
 
         public List<YarnDCDetails> YarnDetails { get; set; }
     }
@@ -308,5 +313,22 @@ namespace GAServices.BusinessEntities.YarnSales
         public string DCDate { get; set; }
         public long PartyId { get; set; }
         public string PartyName { get; set; }
+    }
+
+    public class YarnStock
+    {
+        public string ProductionDate { get; set; }
+        public string ReturnDate { get; set; }
+        public string ReturnDCNo { get; set; }
+        public long ShadeId { get; set; }
+        public string ShadeName { get; set; }
+        public long BlendId { get; set; }
+        public string BlendName { get; set; }
+        public long CountsId { get; set; }
+        public string Counts { get; set; }
+        public string Lot { get; set; }
+        public double ProductionQuantity { get; set; }
+        public double ReturnQuantity { get; set; }
+        public double StockQuantity { get; set; }
     }
 }

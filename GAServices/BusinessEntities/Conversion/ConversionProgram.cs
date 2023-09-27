@@ -135,4 +135,16 @@
         public double DeliveredQuantity { get; set; }
         public double StockAvailable { get; set; }
     }
+
+    public class ProgramWasteStock
+    {
+        public string ProgramNo { get; set; }
+        public string ProgramDate { get; set; }
+        public string ShadeName { get; set; }
+        public string BlendName { get; set;}
+        public string WasteCategoryName { get; set;}
+        public long WasteCategoryId { get; set; }
+        public double WasteQuantity { get; set; }
+        public double StockQuantity { get; set; }
+    }
 }

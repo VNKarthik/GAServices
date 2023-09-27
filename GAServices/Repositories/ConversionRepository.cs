@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System.Collections.Generic;
+using System.Data;
 using System.Xml.Serialization;
 using GAServices.BusinessEntities.Conversion;
 using GAServices.BusinessEntities.FibrePOEntities;
@@ -29,6 +30,8 @@ namespace GAServices.Repositories
         //public ConversionProgramWaste GetProgramByIdWithFibreWaste(long programId);
 
         public List<ProgramWaste> GetProgramWasteById(long programId);
+
+        public List<ProgramWasteStock> GetProductionWasteStock(string wasteEntryFromDate, string wasteEntryToDate, long shadeId, long blendId);
 
         public List<YarnRecoverySummary> GetYarnRecoverySummary();
 
@@ -190,6 +193,7 @@ namespace GAServices.Repositories
 
             AppResponse response = _dataAccess.DB.Insert_UpdateData("ProductionWasteEntry", inParam.ToArray(), outParam.ToArray());
 
+
             if (response != null)
             {
                 if (response.ReturnData != null)
@@ -210,6 +214,20 @@ namespace GAServices.Repositories
             programWaste = _dataAccess.DB.GetData<ProgramWaste>("GetProgramWasteById", new List<MySqlParameter>() { new MySqlParameter("pProgramId", programId) });
 
             return programWaste;
+        }
+
+        public List<ProgramWasteStock> GetProductionWasteStock(string wasteEntryFromDate, string wasteEntryToDate, long shadeId, long blendId)
+        {
+            List<MySqlParameter> lstInParams = new List<MySqlParameter>();
+            lstInParams.Add(new MySqlParameter("'pWasteEntryFromDate", wasteEntryFromDate));
+            lstInParams.Add(new MySqlParameter("'pWasteEntryToDate", wasteEntryToDate));
+            lstInParams.Add(new MySqlParameter("'pShadeId", shadeId));
+            lstInParams.Add(new MySqlParameter("'pBlendId", blendId));
+
+            List<ProgramWasteStock> programWasteStock;
+            programWasteStock = _dataAccess.DB.GetData<ProgramWasteStock>("GetProductionWasteStock", lstInParams);
+
+            return programWasteStock;
         }
 
         public List<YarnRecoverySummary> GetYarnRecoverySummary()
