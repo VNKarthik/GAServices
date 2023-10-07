@@ -23,6 +23,9 @@ namespace GAServices.BusinessEntities.FibrePOEntities
         public double IssuedQty { get; set; }
         public double Stock { get; set; }
         public double Rate { get; set; }
+        public long ProductionWasteDtsId { get; set; }
+        public string BlendName { get; set; }
+        public string WasteCategoryName { get; set;}
     }
 
     //public class FiberConsumption
