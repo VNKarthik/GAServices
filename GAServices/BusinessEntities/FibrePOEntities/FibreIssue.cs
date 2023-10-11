@@ -22,5 +22,7 @@
         public string Lot { get; set; }
 
         public decimal IssueQuantity { get; set; }
-    }
+
+		public long ProductionWasteDtsId { get; set; }
+	}
 }
