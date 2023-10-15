@@ -253,11 +253,44 @@ namespace GAServices.Controllers
             return _fibreRepository.GetFiberConsumptionByRecdDtsId(receivedDtsId);
         }
 
-        [HttpGet("GetFibreStockSearch")]
+		[HttpPost("SaveFiberWaste")]
+		public IActionResult SaveFiberWaste(List<CreateFiberWaste> waste, long createdByUserId)
+        {
+			bool isSaved = _fibreRepository.SaveFiberWaste(waste, createdByUserId);
+
+			if (isSaved)
+				return Ok("Waste Stock Saved Successfully");
+			else
+				return BadRequest("Not able to save the Waste Stock");
+		}
+
+		[HttpGet("GetFibreStockSearch")]
         public ActionResult<IEnumerable<FibreStock>> GetFibreStockSearch(string asOnDate, long partyId, long fiberTypeId)
         {
             return _fibreRepository.GetFibreStockSearch(asOnDate, partyId, fiberTypeId);
         }
 
-    }
+        [HttpGet("GetFibreWasteStock")]
+		public ActionResult<IEnumerable<FiberWasteStock>> GetFibreWasteStock()
+		{
+			return _fibreRepository.GetFibreWasteStock();
+		}
+
+		[HttpPost("CreateWasteSalesDC")]
+		public IActionResult CreateWasteSalesDC(FiberSalesDC salesDC)
+		{
+			bool isReceived = _fibreRepository.CreateWasteSalesDC(salesDC);
+
+			if (isReceived)
+				return Ok("Fibre Received Successfully");
+			else
+				return BadRequest("Not able to receive the Fibre");
+		}
+
+		[HttpGet("GetFiberWasteSalesByParty")]
+		public ActionResult<IEnumerable<FiberSalesDC>> GetFiberWasteSalesByParty(long partyId, string fromDate, string toDate)
+		{
+			return _fibreRepository.GetFiberWasteSalesByParty(partyId, fromDate, toDate);
+		}
+	}
 }

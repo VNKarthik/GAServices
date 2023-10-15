@@ -57,7 +57,7 @@ namespace GAServices.Controllers
             if (isIssuedSuccessfully)
                 return Ok("Successfully Saved the Mixing details");
             else
-                return Ok("Could not Save to Mixing details");
+                return BadRequest("Could not Save to Mixing details");
         }
 
 
@@ -76,7 +76,7 @@ namespace GAServices.Controllers
             if (isSavedSuccessfully)
                 return Ok("Successfully Saved the Production details");
             else
-                return Ok("Could not Save to Production details");
+                return BadRequest("Could not Save to Production details");
         }
 
 
@@ -88,7 +88,7 @@ namespace GAServices.Controllers
             if (isSavedSuccessfully)
                 return Ok("Successfully Saved the Production Waste details");
             else
-                return Ok("Could not Save to Production Waste details");
+                return BadRequest("Could not Save to Production Waste details");
         }
 
 

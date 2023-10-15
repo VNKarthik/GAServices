@@ -51,10 +51,19 @@ namespace GAServices.Repositories
 
         public List<FibrePO> GetFiberPODetails_WitStatus(long partyId, string fromDate, string toDate);
 
-        public List<FiberIssueDetails> GetFiberConsumptionByRecdDtsId(long receivedDtsId);
+        public bool SaveFiberWaste(List<CreateFiberWaste> waste, long createdByUserId);
+
+		public List<FiberIssueDetails> GetFiberConsumptionByRecdDtsId(long receivedDtsId);
 
         public List<FibreStock> GetFibreStockSearch(string asOnDate, long partyId, long fiberTypeId);
-    }
+
+        public List<FiberWasteStock> GetFibreWasteStock();
+
+		public bool CreateWasteSalesDC(FiberSalesDC salesDC);
+
+        public List<FiberSalesDC> GetFiberWasteSalesByParty(long partyId, string fromDate, string toDate);
+
+	}
 
     public class FibreRepository : IFibreRepository
     {
@@ -350,6 +359,32 @@ namespace GAServices.Repositories
             return _dataAccess.DB.GetData<FiberIssueDetails>("GetFiberConsumptionByRecdDtsId", new List<MySqlParameter>() { new MySqlParameter("pReceivedDtsId", receivedDtsId) });
         }
 
+        public bool SaveFiberWaste(List<CreateFiberWaste> waste, long createdByUserId)
+        {
+			List<MySqlParameter> inParam = new List<MySqlParameter>();
+
+			inParam.Add(new MySqlParameter("pWasteDts", waste.GetXmlString()));
+			inParam.Add(new MySqlParameter("pUserId", createdByUserId.ToString()));
+
+			List<MySqlParameter> outParam = new List<MySqlParameter>();
+			outParam.Add(new MySqlParameter("pRecordsInserted", MySqlDbType.Int64));
+
+			AppResponse response = _dataAccess.DB.Insert_UpdateData("CreateFiberWaste", inParam.ToArray(), outParam.ToArray());
+
+			if (response != null)
+			{
+				if (response.ReturnData != null)
+				{
+					if (response.ReturnData["pRecordsInserted"].ToLong() > 0)
+						return true;
+					else
+						return false;
+				}
+			}
+
+			return false;
+		}
+
         public List<FibreStock> GetFibreStockSearch(string asOnDate, long partyId, long fiberTypeId)
         {
             List<MySqlParameter> inParams = new List<MySqlParameter>();
@@ -359,5 +394,50 @@ namespace GAServices.Repositories
 
             return _dataAccess.DB.GetData<FibreStock>("GetFibreStockSearch", inParams);
         }
-    }
+
+		public List<FiberWasteStock> GetFibreWasteStock()
+		{
+			return _dataAccess.DB.GetData<FiberWasteStock>("GetWasteStock", null);
+		}
+
+		public bool CreateWasteSalesDC(FiberSalesDC salesDC)
+		{
+			List<FiberSalesDCDetails> lstFibres = salesDC.SalesDCDetails;
+
+			List<MySqlParameter> inParam = new List<MySqlParameter>();
+
+			inParam.Add(new MySqlParameter("pPartyId", salesDC.PartyId.ToString()));
+			inParam.Add(new MySqlParameter("pDCDate", salesDC.DCDate));
+			inParam.Add(new MySqlParameter("pFibreDts", lstFibres.GetXmlString()));
+			inParam.Add(new MySqlParameter("pUserId", salesDC.CreatedByUserId.ToString()));
+
+			List<MySqlParameter> outParam = new List<MySqlParameter>();
+			outParam.Add(new MySqlParameter("pRecordsInserted", MySqlDbType.Int64));
+
+			AppResponse response = _dataAccess.DB.Insert_UpdateData("CreateWasteSalesDC", inParam.ToArray(), outParam.ToArray());
+
+			if (response != null)
+			{
+				if (response.ReturnData != null)
+				{
+					if (response.ReturnData["pRecordsInserted"].ToLong() > 0)
+						return true;
+					else
+						return false;
+				}
+			}
+
+			return false;
+		}
+
+		public List<FiberSalesDC> GetFiberWasteSalesByParty(long partyId, string fromDate, string toDate)
+		{
+			List<MySqlParameter> inParams = new List<MySqlParameter>();
+			inParams.Add(new MySqlParameter("pPartyId", partyId));
+			inParams.Add(new MySqlParameter("pFromDate", fromDate));
+			inParams.Add(new MySqlParameter("pToDate", toDate));
+
+			return _dataAccess.DB.GetData<FiberSalesDC>("GetFiberWasteSalesByParty", inParams);
+		}
+	}
 }

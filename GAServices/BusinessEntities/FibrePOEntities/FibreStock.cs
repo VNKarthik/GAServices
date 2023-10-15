@@ -49,4 +49,17 @@ namespace GAServices.BusinessEntities.FibrePOEntities
         public double IssuedQty { get; set; }
 
     }
+
+    public class FiberWasteStock
+    {
+        public string ProgramNo { get; set; }
+        public string ProgramDate { get; set; }
+        public long MixedForShadeId { get; set; }
+        public string ShadeName { get; set; }
+		public long BlendId { get; set; }
+		public string BlendName { get; set; }
+        public long WasteCategoryId { get; set; }
+        public string WasteCategoryName { get; set; }
+        public long StockQuantity { get; set; }
+	}
 }

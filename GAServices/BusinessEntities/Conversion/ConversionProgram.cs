@@ -89,6 +89,8 @@
 
     public class ProgramWaste
     {
+        public long BlendId { get; set; }
+        public long ShadeId { get; set; }
         public long WasteCategoryId { get; set; }
         public string WasteCategoryName { get; set; }
         public double WasteQuantity { get; set; }
