@@ -117,5 +117,23 @@ namespace GAServices.Controllers
         {
             return _conversionRepository.GetConversionProgramStatus(shadeId, blendId, countsId);
         }
-    }
+
+		[HttpGet("GetConversionProgramsByShade")]
+		public List<ConversionProgram> GetConversionProgramsByShade(long shadeId, string fromDate, string toDate)
+		{
+			return _conversionRepository.GetConversionProgramsByShade(shadeId, fromDate, toDate);
+		}
+
+		[HttpPost("UpdateConversionProgram")]
+		public async Task<ActionResult<string>> UpdateConversionProgram(ConversionProgram program, long updatedByUserId)
+		{
+			bool isSavedSuccessfully = _conversionRepository.UpdateConversionProgram(program, updatedByUserId);
+
+			if (isSavedSuccessfully)
+				return Ok("Successfully Saved the Production Waste details");
+			else
+				return BadRequest("Could not Save to Production Waste details");
+		}
+
+	}
 }

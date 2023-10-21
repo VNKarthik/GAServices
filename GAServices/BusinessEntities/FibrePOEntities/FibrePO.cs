@@ -62,7 +62,7 @@
 
         public double Rate { get; set; }
 
-        public double Gstpercent { get; set; }
+        public double GSTPercent { get; set; }
 
         public double Length { get; set; }
 

@@ -36,7 +36,12 @@ namespace GAServices.Repositories
         public List<YarnRecoverySummary> GetYarnRecoverySummary();
 
         public List<ConversionProgramStatus> GetConversionProgramStatus(long shadeId, long blendId, long countsId);
-    }
+
+        public List<ConversionProgram> GetConversionProgramsByShade(long shadeId, string fromDate, string toDate);
+
+		public bool UpdateConversionProgram(ConversionProgram program, long updatedByUserId);
+
+	}
 
     public class ConversionRepository : IConversionRepository
     {
@@ -242,5 +247,67 @@ namespace GAServices.Repositories
         {
             return _dataAccess.DB.GetData<ConversionProgramStatus>("GetConversionProgramStatus", new List<MySqlParameter>() { new MySqlParameter("pShadeId", shadeId), new MySqlParameter("pBlendId", blendId), new MySqlParameter("pCountsId", countsId) });
         }
-    }
+
+		public List<ConversionProgram> GetConversionProgramsByShade(long shadeId, string fromDate, string toDate)
+		{
+			List<MySqlParameter> inParams = new List<MySqlParameter>();
+			inParams.Add(new MySqlParameter("pShadeId", shadeId));
+			inParams.Add(new MySqlParameter("pFromDate", fromDate));
+			inParams.Add(new MySqlParameter("pToDate", toDate));
+
+			DataTable dtProgramsDetails, dtMixingDetails;
+			List<ConversionProgram> programs = new List<ConversionProgram>();
+			DataSet dsPrograms = _dataAccess.DB.GetDataSet("GetConversionProgramsByShade", inParams);
+
+			if (dsPrograms.Tables.Count > 0)
+			{
+				if (!dsPrograms.Tables[0].HasRecords())
+					return null;
+
+				programs = Utilities.CreateListFromTable<ConversionProgram>(dsPrograms.Tables[0]);
+
+				dtProgramsDetails = dsPrograms.Tables[1];
+
+				foreach (ConversionProgram p in programs)
+				{
+					dtProgramsDetails.DefaultView.RowFilter = "ProgramId = " + p.ProgramId;
+					p.YarnCounts = Utilities.CreateListFromTable<ConversionYarn>(dtProgramsDetails.DefaultView.ToTable());
+				}
+
+				if (programs.Count > 0)
+					return programs;
+				else
+					return null;
+			}
+			else
+				return null;
+		}
+
+		public bool UpdateConversionProgram(ConversionProgram program, long updatedByUserId)
+		{
+			List<MySqlParameter> inParam = new List<MySqlParameter>();
+			inParam.Add(new MySqlParameter("pProgramId", program.ProgramId));
+			inParam.Add(new MySqlParameter("pProgramDate", program.ProgramDate));
+			inParam.Add(new MySqlParameter("pShadeId", program.ShadeId));
+			inParam.Add(new MySqlParameter("pBlendId", program.BlendId));
+			inParam.Add(new MySqlParameter("pUpdatedByUserId", updatedByUserId));
+			inParam.Add(new MySqlParameter("pRemarks", program.Remarks));
+			inParam.Add(new MySqlParameter("pYarnDts", program.YarnCounts.GetXmlString()));
+
+			List<MySqlParameter> outParam = new List<MySqlParameter>();
+			outParam.Add(new MySqlParameter("pRecordsUpdated", MySqlDbType.Int64));
+
+			AppResponse response = _dataAccess.DB.Insert_UpdateData("UpdateConversionProgram", inParam.ToArray(), outParam.ToArray());
+
+			if (response != null)
+			{
+				if (response.ReturnData != null)
+				{
+					return (response.ReturnData["pRecordsUpdated"].ToLong() > 0);
+				}
+			}
+
+			return false;
+		}
+	}
 }

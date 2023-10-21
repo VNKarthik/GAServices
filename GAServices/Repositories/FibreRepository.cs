@@ -4,6 +4,7 @@ using GAServices.BusinessEntities.Conversion;
 using GAServices.BusinessEntities.FibrePOEntities;
 using GAServices.BusinessEntities.Party;
 using GAServices.Common;
+using Microsoft.AspNetCore.Mvc;
 using MySql.Data.MySqlClient;
 using static Google.Protobuf.WireFormat;
 
@@ -27,6 +28,8 @@ namespace GAServices.Repositories
 
         public long CreatePO(CreateFibrePO fibrePO);
 
+        public bool UpdateFiberPO(FibrePO fiberPO, long updatedByUserId);
+
         public Task<FibrePO> GetPOById(long poId);
 
         public Task<long> GetOpenPOCounts();
@@ -35,9 +38,11 @@ namespace GAServices.Repositories
 
         public Task<List<PendingPODtsByParty>> PendingPODetailsByParty(long partyId);
 
-        //public bool IsAlreadyReceived();
+        public Task<List<FibrePO>> GetFiberPOsByParty(long partyId, string fromDate, string toDate);
 
-        public bool ReceivePOFibre(ReceiveFibrePO fibrePO);
+		//public bool IsAlreadyReceived();
+
+		public bool ReceivePOFibre(ReceiveFibrePO fibrePO);
 
         public Task<List<POSummaryFor12Months>> Last12MonthSummary();
 
@@ -62,6 +67,8 @@ namespace GAServices.Repositories
 		public bool CreateWasteSalesDC(FiberSalesDC salesDC);
 
         public List<FiberSalesDC> GetFiberWasteSalesByParty(long partyId, string fromDate, string toDate);
+
+        public List<FiberSalesDCDetails> GetFiberWasteSalesDtsByParty(long partyId, string fromDate, string toDate);
 
 	}
 
@@ -213,7 +220,33 @@ namespace GAServices.Repositories
             return 0;
         }
 
-        public Task<FibrePO> GetPOById(long poId)
+		public bool UpdateFiberPO(FibrePO fiberPO, long updatedByUserId)
+        {
+			List<MySqlParameter> inParam = new List<MySqlParameter>();
+
+			inParam.Add(new MySqlParameter("pFiberPOId", fiberPO.FibrePoid.ToString()));
+			inParam.Add(new MySqlParameter("pPartyId", fiberPO.PartyId.ToString()));
+			inParam.Add(new MySqlParameter("pFiberDts", fiberPO.FibrePODts.GetXmlString()));
+			inParam.Add(new MySqlParameter("pUserId", updatedByUserId.ToString()));
+
+			List<MySqlParameter> outParam = new List<MySqlParameter>();
+			outParam.Add(new MySqlParameter("pRecordsUpdated", MySqlDbType.Int64));
+
+			AppResponse response = _dataAccess.DB.Insert_UpdateData("UpdateFiberPO", inParam.ToArray(), outParam.ToArray());
+
+			if (response != null)
+			{
+				if (response.ReturnData != null)
+				{
+                    return (response.ReturnData["pRecordsUpdated"].ToLong() > 0);
+				}
+			}
+
+			return false;
+		}
+
+
+		public Task<FibrePO> GetPOById(long poId)
         {
             DataTable dtFibreDetails;
             List<FibrePO> fiberPOs = new List<FibrePO>();
@@ -270,12 +303,47 @@ namespace GAServices.Repositories
             return await Task.FromResult(partywisePOCounts);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="fibrePO"></param>
-        /// <returns></returns>
-        public bool ReceivePOFibre(ReceiveFibrePO fibrePO)
+        public Task<List<FibrePO>> GetFiberPOsByParty(long partyId, string fromDate, string toDate)
+        {
+			List<MySqlParameter> inParams = new List<MySqlParameter>();
+			inParams.Add(new MySqlParameter("pPartyId", partyId));
+			inParams.Add(new MySqlParameter("pFromDate", fromDate));
+			inParams.Add(new MySqlParameter("pToDate", toDate));
+
+			DataTable dtFibreDetails;
+			List<FibrePO> fiberPOs = new List<FibrePO>();
+			DataSet dsFibrePO = _dataAccess.DB.GetDataSet("GetFiberPOsByParty", inParams);
+
+			if (dsFibrePO.Tables.Count > 0)
+			{
+				if (!dsFibrePO.Tables[0].HasRecords())
+					return null;
+
+				fiberPOs = Utilities.CreateListFromTable<FibrePO>(dsFibrePO.Tables[0]);
+
+				dtFibreDetails = dsFibrePO.Tables[1];
+
+				foreach (FibrePO po in fiberPOs)
+				{
+					dtFibreDetails.DefaultView.RowFilter = "POId = " + po.FibrePoid;
+					po.FibrePODts = Utilities.CreateListFromTable<FibrePODts>(dtFibreDetails.DefaultView.ToTable());
+				}
+
+				if (fiberPOs.Count > 0)
+					return Task.FromResult(fiberPOs);
+				else
+					return null;
+			}
+			else
+				return null;
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="fibrePO"></param>
+		/// <returns></returns>
+		public bool ReceivePOFibre(ReceiveFibrePO fibrePO)
         {
             //Need to do duplicate check before receiving
 
@@ -438,6 +506,16 @@ namespace GAServices.Repositories
 			inParams.Add(new MySqlParameter("pToDate", toDate));
 
 			return _dataAccess.DB.GetData<FiberSalesDC>("GetFiberWasteSalesByParty", inParams);
+		}
+
+		public List<FiberSalesDCDetails> GetFiberWasteSalesDtsByParty(long partyId, string fromDate, string toDate)
+		{
+			List<MySqlParameter> inParams = new List<MySqlParameter>();
+			inParams.Add(new MySqlParameter("pPartyId", partyId));
+			inParams.Add(new MySqlParameter("pFromDate", fromDate));
+			inParams.Add(new MySqlParameter("pToDate", toDate));
+
+			return _dataAccess.DB.GetData<FiberSalesDCDetails>("GetFiberWasteSalesDtsByParty", inParams);
 		}
 	}
 }

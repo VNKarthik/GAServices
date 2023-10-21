@@ -16,7 +16,8 @@
         public string Remarks { get; set; }
         public bool IsDeleted { get; set; }
         public bool IsClosed { get; set; }
-        public long CreatedByUserId { get; set; }
+        public bool IsMixed { get; set; }
+		public long CreatedByUserId { get; set; }
         public long ClosedByUserId { get; set; }
 
         public List<ConversionYarn> YarnCounts { get; set; }
